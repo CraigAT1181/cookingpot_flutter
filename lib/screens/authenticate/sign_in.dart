@@ -24,9 +24,7 @@ class _SignInState extends State<SignIn> {
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 50),
           child: ElevatedButton(
               onPressed: () async {
-                dynamic result = await _auth.userLogin(
-                    'craigtipple81@gmail.com', 'P@ssword123');
-                print('UserDetails result: $result');
+                await _auth.userLogin('craigtipple81@gmail.com', 'P@ssword123');
               },
               child: const Text('Sign In'))),
     );
