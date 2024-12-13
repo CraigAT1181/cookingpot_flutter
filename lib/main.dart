@@ -1,6 +1,9 @@
+import 'package:agrarian_flutter/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:agrarian_flutter/services/supabase.dart';
 import 'package:agrarian_flutter/screens/wrapper.dart';
+import 'package:provider/provider.dart';
+import 'package:agrarian_flutter/models/user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +18,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Wrapper(),
+    return StreamProvider<User?>.value(
+      value: AuthService().authStateChanges,
+      initialData: null,
+      child: const MaterialApp(
+        home: Wrapper(),
+      ),
     );
   }
 }
