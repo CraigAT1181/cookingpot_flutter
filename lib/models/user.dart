@@ -1,4 +1,4 @@
-class CustomUser {
+class User {
   final String userId;
   final String authId;
   final String userName;
@@ -8,7 +8,7 @@ class CustomUser {
   final String allotment;
   final String plot;
 
-  CustomUser({
+  User({
     required this.userId,
     required this.authId,
     required this.userName,

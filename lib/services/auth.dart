@@ -1,13 +1,12 @@
 import 'package:agrarian_flutter/services/supabase.dart';
-// import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:agrarian_flutter/models/user.dart';
 
 class AuthService {
   final supabase = SupabaseService().supabase;
 
-  CustomUser? customUser(userDetails) {
+  User? user(userDetails) {
     return userDetails != null
-        ? CustomUser(
+        ? User(
             userId: userDetails['user_id'],
             authId: userDetails['auth_user_id'],
             userName: userDetails['user_name'],
@@ -36,13 +35,13 @@ class AuthService {
           .from("users")
           .select("*, towns(town_name), allotments(allotment_name) ")
           .eq("auth_user_id", supabaseUser.id)
-          .single();
+          .maybeSingle();
 
-      return customUser(userDetails);
+      if (userDetails == null) return null;
+
+      return user(userDetails);
     } catch (e) {
-      // throw Exception('An error occurred: $e');
-      print('Error signing in: $e');
-      return null;
+      throw Exception('An error occurred: $e');
     }
   }
 }
