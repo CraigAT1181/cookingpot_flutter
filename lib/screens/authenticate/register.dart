@@ -1,16 +1,16 @@
-import 'package:agrarian_flutter/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:agrarian_flutter/services/auth.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({super.key, required this.toggleView});
+class Register extends StatefulWidget {
+  const Register({super.key, required this.toggleView});
 
   final Function toggleView;
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
@@ -24,12 +24,12 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.brown[200],
         elevation: 0.0,
-        title: const Text('Welcome back!'),
+        title: const Text('Welcome Aboard!'),
         actions: <Widget>[
           TextButton(
               onPressed: () => widget.toggleView(),
               style: TextButton.styleFrom(foregroundColor: Colors.brown[800]),
-              child: const Text('Register')),
+              child: const Text('Sign In')),
         ],
       ),
       body: Container(
@@ -67,14 +67,15 @@ class _SignInState extends State<SignIn> {
                 TextButton(
                     style: TextButton.styleFrom(
                         backgroundColor: Colors.brown[400]),
-                    onPressed: () async {
+                    onPressed: () {
                       if (_formKey.currentState != null &&
                           _formKey.currentState!.validate()) {
-                        await _auth.userLogin(email, password);
+                        print('email: $email');
+                        print('password: $password');
                       }
                     },
                     child: const Text(
-                      'Sign in',
+                      'Register',
                       style: TextStyle(color: Colors.white),
                     ))
               ],

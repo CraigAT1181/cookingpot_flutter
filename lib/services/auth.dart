@@ -41,7 +41,7 @@ class AuthService {
     });
   }
 
-  Future userLogin(String email, String password) async {
+  Future<User?> userLogin(String email, String password) async {
     try {
       final loginResponse = await supabase.auth.signInWithPassword(
         email: email,
