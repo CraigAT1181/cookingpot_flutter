@@ -1,3 +1,4 @@
+import 'package:agrarian_flutter/shared/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:agrarian_flutter/services/auth.dart';
 import 'dart:io';
@@ -35,18 +36,35 @@ class _RegisterState extends State<Register> {
     }
   }
 
+  Future handleRegistration() async {
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+      if (profilePic == null) {
+        print("No profile picture selected.");
+        return;
+      }
+      final register = await _auth.registerUser(
+          userName, email, profilePic!.path, town, allotment, plot, password);
+
+      if (register != null) {
+        await _auth.userLogin(email, password);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.brown[100],
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.brown[200],
+          backgroundColor: Colors.green[800],
+          foregroundColor: Colors.white,
           elevation: 0.0,
           title: const Text('Welcome Aboard!'),
           actions: <Widget>[
+            const Icon(Icons.person),
             TextButton(
                 onPressed: () => widget.toggleView(),
-                style: TextButton.styleFrom(foregroundColor: Colors.brown[800]),
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
                 child: const Text('Sign In')),
           ],
         ),
@@ -71,7 +89,9 @@ class _RegisterState extends State<Register> {
                         decoration: const InputDecoration(hintText: 'Email'),
                         validator: (value) => value == null || value.isEmpty
                             ? 'Please enter an email address.'
-                            : null,
+                            : value.contains('@')
+                                ? null
+                                : 'Please use a valid email address',
                         onChanged: (val) => setState(() => email = val),
                       ),
                       const SizedBox(height: 20.0),
@@ -110,49 +130,66 @@ class _RegisterState extends State<Register> {
                       ),
                       const SizedBox(height: 20.0),
                       GestureDetector(
-                        onTap: _pickImage,
-                        child: CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.white,
-                          backgroundImage: profilePic != null
-                              ? FileImage(profilePic!)
-                              : null,
-                          child: profilePic == null
-                              ? Icon(
-                                  Icons.add_a_photo,
-                                  size: 40,
-                                  color: Colors.brown[800],
-                                )
-                              : null,
+                        onTap: profilePic == null
+                            ? _pickImage
+                            : () {
+                                // Optional: show a dialog to confirm removal
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('Remove Profile Picture'),
+                                    content: const Text(
+                                        'Are you sure you want to remove the profile picture?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(
+                                              context); // Close dialog
+                                        },
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            profilePic = null; // Clear the file
+                                          });
+                                          Navigator.pop(
+                                              context); // Close dialog
+                                        },
+                                        child: const Text('Remove'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // The circular avatar
+                            Material(
+                              elevation: 5,
+                              shape: const CircleBorder(),
+                              child: CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.grey[200],
+                                backgroundImage: profilePic != null
+                                    ? FileImage(profilePic!)
+                                    : null,
+                                child: profilePic == null
+                                    ? Icon(
+                                        Icons.add_a_photo,
+                                        size: 40,
+                                        color: Colors.green[800],
+                                      )
+                                    : null,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 20.0),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.brown[400],
-                        ),
-                        onPressed: () async {
-                          if (_formKey.currentState != null &&
-                              _formKey.currentState!.validate()) {
-                            if (profilePic == null) {
-                              print("No profile picture selected.");
-                              return;
-                            }
-                            await _auth.registerUser(
-                                userName,
-                                email,
-                                profilePic!.path,
-                                town,
-                                allotment,
-                                plot,
-                                password);
-                          }
-                        },
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+                      PrimaryButton(
+                          onPressed: handleRegistration, text: 'Register'),
                     ],
                   ),
                 ))));

@@ -1,4 +1,5 @@
 import 'package:agrarian_flutter/services/auth.dart';
+import 'package:agrarian_flutter/shared/primary_button.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
@@ -17,18 +18,26 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
 
+  Future handleSignIn() async {
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+      await _auth.userLogin(email, password);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown[100],
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.brown[200],
+        backgroundColor: Colors.green[800],
+        foregroundColor: Colors.white,
         elevation: 0.0,
         title: const Text('Welcome back!'),
         actions: <Widget>[
+          const Icon(Icons.person),
           TextButton(
               onPressed: () => widget.toggleView(),
-              style: TextButton.styleFrom(foregroundColor: Colors.brown[800]),
+              style: TextButton.styleFrom(foregroundColor: Colors.white),
               child: const Text('Register')),
         ],
       ),
@@ -64,19 +73,7 @@ class _SignInState extends State<SignIn> {
                 const SizedBox(
                   height: 20.0,
                 ),
-                TextButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: Colors.brown[400]),
-                    onPressed: () async {
-                      if (_formKey.currentState != null &&
-                          _formKey.currentState!.validate()) {
-                        await _auth.userLogin(email, password);
-                      }
-                    },
-                    child: const Text(
-                      'Sign in',
-                      style: TextStyle(color: Colors.white),
-                    ))
+                PrimaryButton(onPressed: handleSignIn, text: 'Sign in')
               ],
             ),
           )),
