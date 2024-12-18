@@ -1,4 +1,5 @@
 import 'package:agrarian_flutter/services/auth.dart';
+import 'package:agrarian_flutter/shared/constants.dart';
 import 'package:agrarian_flutter/shared/primary_button.dart';
 import 'package:flutter/material.dart';
 
@@ -60,6 +61,7 @@ class _SignInState extends State<SignIn> {
                   height: 20.0,
                 ),
                 TextFormField(
+                  decoration: textInputDecoration.copyWith(hintText: 'Email'),
                   validator: (value) => value == null || value.isEmpty
                       ? 'Please enter an email address.'
                       : null,
@@ -71,6 +73,8 @@ class _SignInState extends State<SignIn> {
                   height: 20.0,
                 ),
                 TextFormField(
+                  decoration:
+                      textInputDecoration.copyWith(hintText: 'Password'),
                   validator: (value) => value == null || value.length < 6
                       ? 'Please ensure password is at least 6 characters long.'
                       : null,
