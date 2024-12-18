@@ -24,9 +24,9 @@ class AuthService {
   Stream<custom_user.User?> get authStateChanges {
     return supabase.auth.onAuthStateChange.asyncMap((event) async {
       final session = event.session;
-      print('onAuthChange: $event');
-      final userId = session?.user.id;
-      print('userId: $userId');
+      // print('onAuthChange: $event');
+      // final userId = session?.user.id;
+      // print('userId: $userId');
 
       if (session != null) {
         final userId = session.user.id;
@@ -72,7 +72,7 @@ class AuthService {
       return publicUrl;
     } catch (e) {
       // Handle errors gracefully
-      print('Error uploading image: $e');
+      // print('Error uploading image: $e');
       throw Exception('Error storing image on Supabase: $e');
     }
   }
@@ -157,7 +157,7 @@ class AuthService {
         plot: plot,
       );
     } catch (e) {
-      throw Exception('Error adding new user: $e');
+      rethrow;
     }
   }
 
@@ -192,7 +192,7 @@ class AuthService {
     try {
       await supabase.auth.signOut();
     } catch (e) {
-      print('Error signing out: $e');
+      // print('Error signing out: $e');
       return null;
     }
   }

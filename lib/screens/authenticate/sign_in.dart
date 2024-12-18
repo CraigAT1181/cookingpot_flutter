@@ -18,9 +18,18 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
 
+  String error = '';
+
   Future handleSignIn() async {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-      await _auth.userLogin(email, password);
+      try {
+        await _auth.userLogin(email, password);
+      } catch (e) {
+        setState(() {
+          error =
+              "Oops, something went wrong! Please check your details and try again.";
+        });
+      }
     }
   }
 
@@ -73,7 +82,14 @@ class _SignInState extends State<SignIn> {
                 const SizedBox(
                   height: 20.0,
                 ),
-                PrimaryButton(onPressed: handleSignIn, text: 'Sign in')
+                PrimaryButton(onPressed: handleSignIn, text: 'Sign in'),
+                const SizedBox(
+                  height: 12.0,
+                ),
+                Text(
+                  error,
+                  style: const TextStyle(color: Colors.red),
+                )
               ],
             ),
           )),

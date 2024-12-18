@@ -25,6 +25,8 @@ class _RegisterState extends State<Register> {
   String password = '';
   File? profilePic;
 
+  String error = '';
+
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -38,15 +40,21 @@ class _RegisterState extends State<Register> {
 
   Future handleRegistration() async {
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-      if (profilePic == null) {
-        print("No profile picture selected.");
-        return;
-      }
-      final register = await _auth.registerUser(
-          userName, email, profilePic!.path, town, allotment, plot, password);
+      try {
+        final String profilePicPath = profilePic?.path ?? 'assets/no_image.jpg';
 
-      if (register != null) {
-        await _auth.userLogin(email, password);
+        final register = await _auth.registerUser(
+            userName, email, profilePicPath, town, allotment, plot, password);
+
+        if (register != null) {
+          await _auth.userLogin(email, password);
+        }
+      } catch (e) {
+        setState(() {
+          // error = e.toString();
+          error =
+              "Oops, something went wrong! Please check your details and try again.";
+        });
       }
     }
   }
@@ -190,6 +198,13 @@ class _RegisterState extends State<Register> {
                       const SizedBox(height: 20.0),
                       PrimaryButton(
                           onPressed: handleRegistration, text: 'Register'),
+                      const SizedBox(
+                        height: 12.0,
+                      ),
+                      Text(
+                        error,
+                        style: const TextStyle(color: Colors.red),
+                      )
                     ],
                   ),
                 ))));
